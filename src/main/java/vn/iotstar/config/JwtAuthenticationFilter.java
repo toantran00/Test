@@ -29,10 +29,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
                                     FilterChain filterChain) throws ServletException, IOException {
         
-        // BỎ QUA xử lý JWT cho các URL logout và public
+        // CHỈ bỏ qua các static resources, KHÔNG bỏ qua /logout
         String path = request.getServletPath();
-        if (path.equals("/logout") || path.startsWith("/login") || path.startsWith("/css/") || 
-            path.startsWith("/js/") || path.startsWith("/images/") || path.startsWith("/webjars/")) {
+        if (path.startsWith("/css/") || path.startsWith("/js/") || 
+            path.startsWith("/images/") || path.startsWith("/webjars/") ||
+            path.startsWith("/api/auth/") || path.startsWith("/api/public/")) {
             filterChain.doFilter(request, response);
             return;
         }
