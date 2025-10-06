@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+    <!-- Product Reviews Section -->
+    <section class="product-reviews" th:fragment="review">
+        <div class="container">
+            <div class="reviews-header" data-aos="fade-down">
+                <h2 class="reviews-title">Đánh giá sản phẩm</h2>
+                <div class="reviews-summary">
+                    <div class="average-rating">
+                        <span class="rating-number" th:text="${averageRating != null} ? ${#numbers.formatDecimal(averageRating, 1, 1)} : '0.0'">0.0</span>
+                        <div class="stars-large">
+                            <i class="fa fa-star" th:classappend="${(averageRating != null and averageRating >= 1)} ? 'filled' : ''"></i>
+                            <i class="fa fa-star" th:classappend="${(averageRating != null and averageRating >= 2)} ? 'filled' : ''"></i>
+                            <i class="fa fa-star" th:classappend="${(averageRating != null and averageRating >= 3)} ? 'filled' : ''"></i>
+                            <i class="fa fa-star" th:classappend="${(averageRating != null and averageRating >= 4)} ? 'filled' : ''"></i>
+                            <i class="fa fa-star" th:classappend="${(averageRating != null and averageRating >= 5)} ? 'filled' : ''"></i>
+                        </div>
+                        <span class="total-reviews" th:text="'(' + (${totalReviews != null} ? ${totalReviews} : 0) + ' đánh giá)'"></span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Reviews List -->
+            <div class="reviews-list" id="reviewsList" th:if="${not #lists.isEmpty(danhGias)}">
+                <div th:each="danhGia : ${danhGias}" class="review-item" data-aos="fade-up">
+                    <div class="review-header">
+                        <div class="user-info">
+                            <div class="user-avatar">
+                                <img th:if="${danhGia.nguoiDung?.hinhAnh != null and danhGia.nguoiDung?.hinhAnh != ''}" 
+                                     th:src="${danhGia.nguoiDung.hinhAnh}" 
+                                     th:alt="${danhGia.nguoiDung?.tenNguoiDung ?: 'Người dùng'}"
+                                     class="user-avatar-img">
+                                <i th:unless="${danhGia.nguoiDung?.hinhAnh != null and danhGia.nguoiDung?.hinhAnh != ''}" 
+                                   class="fa-solid fa-user user-avatar-icon"></i>
+                            </div>
+                            <div class="user-details">
+                                <span class="user-name" th:text="${danhGia.nguoiDung?.tenNguoiDung ?: 'Người dùng ẩn danh'}">Người dùng</span>
+                                <div class="review-rating">
+                                    <div class="stars-small">
+                                        <i class="fa fa-star" th:classappend="${danhGia.soSao >= 1} ? 'filled' : ''"></i>
+                                        <i class="fa fa-star" th:classappend="${danhGia.soSao >= 2} ? 'filled' : ''"></i>
+                                        <i class="fa fa-star" th:classappend="${danhGia.soSao >= 3} ? 'filled' : ''"></i>
+                                        <i class="fa fa-star" th:classappend="${danhGia.soSao >= 4} ? 'filled' : ''"></i>
+                                        <i class="fa fa-star" th:classappend="${danhGia.soSao >= 5} ? 'filled' : ''"></i>
+                                    </div>
+                                    <span class="review-date" th:text="${#dates.format(danhGia.ngayDanhGia, 'dd/MM/yyyy HH:mm')}"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="review-content">
+                        <p class="review-comment" th:text="${danhGia.binhLuan} ?: 'Không có bình luận'"></p>
+                        <div th:if="${danhGia.anhVideo != null and danhGia.anhVideo != ''}" class="review-media">
+                            <img th:src="@{'/images/uploads/reviews/' + ${danhGia.anhVideo}}" alt="Media đánh giá" class="review-image">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Load More Reviews Button -->
+            <div th:if="${hasMoreReviews}" class="load-more-reviews" id="loadMoreContainer">
+                <button class="load-more-btn" id="loadMoreBtn">
+                    <i class="fa-solid fa-chevron-down"></i> Hiển thị thêm bình luận
+                </button>
+                <div class="loading-spinner" id="loadingSpinner" style="display: none;">
+                    <i class="fa-solid fa-spinner fa-spin"></i> Đang tải...
+                </div>
+            </div>
+
+            <!-- No Reviews Message -->
+            <div th:if="${#lists.isEmpty(danhGias)}" class="no-reviews" data-aos="fade-up">
+                <div class="no-reviews-icon">
+                    <i class="fa-solid fa-comment-dots"></i>
+                </div>
+                <h3>Chưa có đánh giá nào</h3>
+                <p>Hãy là người đầu tiên đánh giá sản phẩm này!</p>
+            </div>
+        </div>
+    </section>
+</body>
+</html>
